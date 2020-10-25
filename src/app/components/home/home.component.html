@@ -1,0 +1,42 @@
+<div class="home">
+  <div class="centered">
+    <div class="div-crown-wrapper">
+      <img
+        id="imgMagic"
+        width="256"
+        height="212.8"
+        src="../../../assets/crown-yellow.svg"
+        [@imgMagicAnimation]="currentState"
+      />
+
+      <img
+        id="imgFailure"
+        width="0"
+        height="0"
+        src=""
+        [@imgFailureShow]="currentState"
+      />
+    </div>
+
+    <div class="div-headers-wrapper">
+      <h1 [@h1DefaultHide]="currentState">Sile car</h1>
+      <h1 [@h1FailureShow]="currentState" class="h1-failure">Izdajico</h1>
+      <h1
+        [@h1SuccessShow]="currentState"
+        class="h1-success"
+        id="h1Success"
+      ></h1>
+    </div>
+
+    <button
+      pButton
+      pRipple
+      type="button"
+      id="btnMagic"
+      label="."
+      class="p-button-rounded btn-magic"
+      (click)="onClickMagicBtn($event)"
+    ></button>
+    <div class="div-metal"></div>
+  </div>
+</div>
