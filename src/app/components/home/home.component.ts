@@ -2,6 +2,11 @@ import { trigger, state, style, animate, transition, keyframes } from '@angular/
 import { Component, OnInit } from '@angular/core';
 import { HostListener } from '@angular/core';
 
+enum UserAgent {
+  Desktop = 'DESKTOP',
+  Phone = 'PHONE'
+}
+
 enum MagicStates {
   Initial = 'INITIAL',
   Failure = 'FAILURE',
@@ -30,7 +35,9 @@ const C_DEFAULT_IMG_HEIGHT = 212.8;
         height: '0px',
       })),
       state(MagicStates.Succes, style({
-      })),
+        width: '{{width}}',
+        height: '{{height}}',
+      }), { params: { width: 1, height: 2 } }),
       transition(MagicTransitions.InitialToFailure.toString(), animate('2500ms ease')),
       transition(MagicTransitions.InitialToSuccess.toString(), [style({ transform: 'rotate(-7200deg)' }), animate('5000ms ease-in-out')]),
     ]),
@@ -41,9 +48,9 @@ const C_DEFAULT_IMG_HEIGHT = 212.8;
         height: '0px',
       })),
       state(MagicStates.Failure, style({
-        width: '202px',
-        height: '320px',
-      })),
+        width: '{{width}}',
+        height: '{{height}}',
+      }), { params: { width: 1, height: 2 } }),
       transition(MagicTransitions.InitialToFailure.toString(), animate('5000ms ease-in-out')),
     ]),
 
@@ -64,13 +71,15 @@ const C_DEFAULT_IMG_HEIGHT = 212.8;
 
     trigger('h1FailureShow', [
       state(MagicStates.Initial, style({ 'font-size': '0' })),
+      state(MagicStates.Succes, style({ 'font-size': '0' })),
       state(MagicStates.Failure, style({
-        display: 'block',
-        'font-size': '80pt'
-      })),
-      transition(MagicTransitions.InitialToFailure.toString(), animate(1500, keyframes(
+        'font-size': '{{fontSize}}'
+      }), { params: { fontSize: 1 } }),
+      transition(MagicTransitions.InitialToFailure.toString(), animate(5000, keyframes(
         [
-          style({ 'font-size': '80pt' }),
+          style({
+            'font-size': '*'
+          }),
         ])),
       ),
     ]),
@@ -79,11 +88,11 @@ const C_DEFAULT_IMG_HEIGHT = 212.8;
       state(MagicStates.Initial, style({ 'font-size': '0' })),
       state(MagicStates.Succes, style({
         display: 'block',
-        'font-size': '80pt'
-      })),
+        'font-size': '{{fontSize}}'
+      }), { params: { fontSize: 1 } }),
       transition(MagicTransitions.InitialToSuccess.toString(), animate(1500, keyframes(
         [
-          style({ 'font-size': '80pt' }),
+          style({ 'font-size': '*' }),
         ])),
       ),
     ]),
@@ -91,6 +100,13 @@ const C_DEFAULT_IMG_HEIGHT = 212.8;
 })
 export class HomeComponent implements OnInit {
   currentState: MagicStates;
+  fontSize: string;
+  imgInitialWidth: string;
+  imgInitialHeight: string;
+  imgFailWidth: string;
+  imgFailHeight: string;
+  imgSuccessWidth: string;
+  imgSuccessHeight: string;
   private clickCount: number;
   private maxClicks: number;
   private scrWidth: number;
@@ -103,11 +119,14 @@ export class HomeComponent implements OnInit {
   constructor() { this.getScreenSize(); }
 
   ngOnInit(): void {
+    this.isMobileDevice();
     this.changeState(MagicStates.Initial);
   }
 
   //#region EVENT HANDLERS
   onClickMagicBtn(event: any): void {
+    if (this.currentState !== MagicStates.Initial) { return; }
+
     this.clickCount++;
 
     if (this.clickCount === this.maxClicks) {
@@ -137,9 +156,11 @@ export class HomeComponent implements OnInit {
         this.currentState = newState;
         this.clickCount = 0;
         this.maxClicks = this.getRandomIntInclusive(1, 10);
-        this.widthAddition = (this.scrWidth / 100) * 3;
+        this.widthAddition = (this.scrWidth / 100) * 5;
         this.heightAddition = (this.scrHeight / 100) * 5;
         this.successTimeGoal = this.getRandomIntInclusive(45000, 180000);
+
+        this.setImgSize('imgMagic', this.imgInitialWidth, this.imgInitialHeight);
         this.startMagicTimer();
         break;
 
@@ -158,13 +179,13 @@ export class HomeComponent implements OnInit {
 
   magicFailAction(): void {
     this.disableMagicBtn();
-    this.changeImgSrc('imgFailure', '../../../assets/knife-hearth-red.svg');
+    this.changeImgSrc('imgFailure', './assets/knife-hearth-red.svg');
   }
 
   magicSuccessAction(): void {
     this.disableMagicBtn();
     this.setHeaderSuccess();
-    this.changeImgSrc('imgMagic', '../../../assets/crown-green.svg');
+    this.changeImgSrc('imgMagic', './assets/crown-green.svg');
   }
   //#endregion
 
@@ -202,6 +223,14 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  setImgSize(id: string, width: string, height: string): void {
+    const element = document.getElementById(id);
+    if (element != null && typeof element !== typeof 'undefined') {
+      element.attributes.getNamedItem('width').value = width;
+      element.attributes.getNamedItem('height').value = height;
+    }
+  }
+
   setHeaderSuccess(): void {
     const elementH1 = document.getElementById('h1Success');
     if (elementH1 != null && typeof elementH1 !== typeof 'undefined') {
@@ -220,6 +249,42 @@ export class HomeComponent implements OnInit {
     const elementImg = document.getElementById(id) as HTMLInputElement;
     if (elementImg != null && typeof elementImg !== typeof 'undefined') {
       elementImg.src = newSrc;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  isMobileDevice(event?: any): boolean {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      console.log('phone');
+      this.updateMobileDesktopVariables(UserAgent.Phone);
+      return true;
+    }
+
+    this.updateMobileDesktopVariables(UserAgent.Desktop);
+    return false;
+  }
+
+  updateMobileDesktopVariables(newAgent: UserAgent): void {
+    switch (newAgent) {
+      case UserAgent.Desktop:
+        this.fontSize = '80pt';
+        this.imgInitialWidth = '256px';
+        this.imgInitialHeight = '212.8px';
+        this.imgFailWidth = '320px';
+        this.imgFailHeight = '426px';
+        this.imgSuccessWidth = '256px';
+        this.imgSuccessHeight = '212.8px';
+        break;
+
+      case UserAgent.Phone:
+        this.fontSize = '60pt';
+        this.imgInitialWidth = '256px';
+        this.imgInitialHeight = '212.8px';
+        this.imgFailWidth = '202px';
+        this.imgFailHeight = '320px';
+        this.imgSuccessWidth = '384px';
+        this.imgSuccessHeight = '320px';
+        break;
     }
   }
   //#endregion

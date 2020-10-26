@@ -10,31 +10,44 @@ $metalSecondaryColor: rgb(127, 124, 125);
   --btnMagicWidth: 10vw;
   --btnMagicHeight: 5vw;
   --btnMagicPushDown: 2vh;
+  --btnMagicBoxShadowLvl1: 1vh;
   --btnMagicBoxShadowLvl2: 2vh;
   --btnMagicBoxShadowLvl3: 3vh;
   --btnMagicBoxShadowLvl4: 4vh;
   --btnMagicBoxShadowLvl5: 5vh;
+  --btnMagicBoxShadowLvl6: 0vh;
+  --btnMagicBoxShadowLvl7: 0vh;
+  --btnMagicBoxShadowLvl8: 0vh;
+  --btnMagicCursor: pointer;
   --divMetalWidth: 12vw;
   --divMetalHeight: 6vw;
   --divMetalMargin: -3vw;
   --divMetalBoxShadowLvl2: 2vh;
   --divMetalBoxShadowLvl3: 3vh;
+  --divMetalBoxShadowLvl4: 0vw;
+  --divMetalBoxShadowLvl5: 0vw;
   --divHeadersWrapperHeight: 14vh;
+  --fontSize: 60t;
 }
 
-@mixin btn-magic-box-shadow-4 {
-  box-shadow: 0 1vh $btnSecondaryRedColor,
-    0 var(--btnMagicBoxShadowLvl2) $btnSecondaryRedColor,
-    0 var(--btnMagicBoxShadowLvl3) $btnSecondaryRedColor,
-    0 var(--btnMagicBoxShadowLvl4) $btnSecondaryRedColor;
-}
-
-@mixin btn-magic-box-shadow-5 {
-  box-shadow: 0 1vh $btnSecondaryRedColor,
+@mixin btn-magic-box-shadow-active {
+  box-shadow: 0 var(--btnMagicBoxShadowLvl1) $btnSecondaryRedColor,
     0 var(--btnMagicBoxShadowLvl2) $btnSecondaryRedColor,
     0 var(--btnMagicBoxShadowLvl3) $btnSecondaryRedColor,
     0 var(--btnMagicBoxShadowLvl4) $btnSecondaryRedColor,
-    0 var(--btnMagicBoxShadowLvl5) $btnSecondaryRedColor;
+    0 var(--btnMagicBoxShadowLvl5) $btnSecondaryRedColor,
+    0 var(--btnMagicBoxShadowLvl6) $btnSecondaryRedColor;
+}
+
+@mixin btn-magic-box-shadow {
+  box-shadow: 0 var(--btnMagicBoxShadowLvl1) $btnSecondaryRedColor,
+    0 var(--btnMagicBoxShadowLvl2) $btnSecondaryRedColor,
+    0 var(--btnMagicBoxShadowLvl3) $btnSecondaryRedColor,
+    0 var(--btnMagicBoxShadowLvl4) $btnSecondaryRedColor,
+    0 var(--btnMagicBoxShadowLvl5) $btnSecondaryRedColor,
+    0 var(--btnMagicBoxShadowLvl6) $btnSecondaryRedColor,
+    0 var(--btnMagicBoxShadowLvl7) $btnSecondaryRedColor,
+    0 var(--btnMagicBoxShadowLvl8) $btnSecondaryRedColor;
 }
 
 .home {
@@ -46,7 +59,7 @@ $metalSecondaryColor: rgb(127, 124, 125);
 
   h1 {
     text-transform: uppercase;
-    font-size: 60pt;
+    font-size: var(--fontSize);
     font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
     text-align: center;
     margin: 0;
@@ -54,12 +67,10 @@ $metalSecondaryColor: rgb(127, 124, 125);
 
     &.h1-failure {
       color: $txtFailureColor;
-      display: none;
     }
 
     &.h1-success {
       color: $txtSuccessColor;
-      display: none;
     }
   }
 
@@ -70,6 +81,7 @@ $metalSecondaryColor: rgb(127, 124, 125);
     transform: translate(-50%, -50%);
     justify-items: center;
     display: grid;
+    width: 100vw;
   }
 
   .div-headers-wrapper {
@@ -96,7 +108,9 @@ $metalSecondaryColor: rgb(127, 124, 125);
     margin: var(--divMetalMargin);
     box-shadow: 0 1vh $metalSecondaryColor,
       0 var(--divMetalBoxShadowLvl2) $metalSecondaryColor,
-      0 var(--divMetalBoxShadowLvl3) $metalSecondaryColor;
+      0 var(--divMetalBoxShadowLvl3) $metalSecondaryColor,
+      0 var(--divMetalBoxShadowLvl4) $metalSecondaryColor,
+      0 var(--divMetalBoxShadowLvl5) $metalSecondaryColor;
   }
 }
 
@@ -112,12 +126,13 @@ $metalSecondaryColor: rgb(127, 124, 125);
   margin-top: 5vh;
   border-radius: 50%;
   border: none;
-  @include btn-magic-box-shadow-5;
+  cursor: var(--btnMagicCursor);
+  @include btn-magic-box-shadow;
 
   &:focus {
     color: $btnPrimaryRedColor;
     background-color: $btnPrimaryRedColor;
-    @include btn-magic-box-shadow-5;
+    @include btn-magic-box-shadow;
   }
 
   &:not(:disabled):not(.disabled) {
@@ -126,14 +141,14 @@ $metalSecondaryColor: rgb(127, 124, 125);
       color: $btnPrimaryRedColor;
       background-color: $btnPrimaryRedColor;
       transform: translate3d(0, var(--btnMagicPushDown), 0);
-      @include btn-magic-box-shadow-4;
+      @include btn-magic-box-shadow-active;
     }
   }
 
   &:hover {
     color: $btnPrimaryRedColor;
     background-color: $btnPrimaryRedColor;
-    @include btn-magic-box-shadow-5;
+    @include btn-magic-box-shadow;
   }
 }
 
@@ -142,10 +157,12 @@ $breakpoints: (
   medium: 700px,
   large: 1024px,
 ) !default;
+
+/// Small
 @media screen and (max-width: map-get($breakpoints, "small")) {
   body,
   div {
-    //background-color: lightblue;
+    background-color: gray;
     --btnMagicWidth: 8vw;
     --btnMagicHeight: 5vw;
     --divMetalWidth: 16vw;
@@ -153,60 +170,146 @@ $breakpoints: (
     --divMetalMargin: -2vw;
   }
 }
-@media screen and (min-width: map-get($breakpoints, "small")) and (max-width: map-get($breakpoints, "medium")) {
+
+/// Medium - Dekstop
+@media only screen and (min-width: map-get($breakpoints, "small")) and (max-width: map-get($breakpoints, "medium")) {
   body,
   div {
     //background-color: lightpink;
     --btnMagicWidth: 8vw;
     --btnMagicHeight: 5vw;
     --btnMagicPushDown: 1vh;
+    --btnMagicBoxShadowLvl1: 1vh;
     --btnMagicBoxShadowLvl2: 1.3vh;
     --btnMagicBoxShadowLvl3: 2vh;
     --btnMagicBoxShadowLvl4: 0vh;
     --btnMagicBoxShadowLvl5: 0vh;
+    --btnMagicBoxShadowLvl6: 0vh;
+    --btnMagicBoxShadowLvl7: 0vh;
+    --btnMagicBoxShadowLvl8: 0vh;
+    --btnMagicCursor: pointer;
     --divMetalWidth: 12vw;
     --divMetalHeight: 8vw;
     --divMetalMargin: -3vw;
     --divMetalBoxShadowLvl2: 1.5vh;
     --divMetalBoxShadowLvl3: 0vh;
+    --divMetalBoxShadowLvl4: 0vh;
+    --divMetalBoxShadowLvl5: 0vh;
     --divHeadersWrapperHeight: 22vh;
+    --fontSize: 60pt;
   }
 }
-@media screen and (min-width: map-get($breakpoints, "medium")) and (max-width: map-get($breakpoints, "large")) {
+/// Medium - Phone
+@media only screen and (pointer: none) and (min-width: map-get($breakpoints, "small")) and (max-width: map-get($breakpoints, "medium")),
+  only screen and (pointer: coarse) and (min-width: map-get($breakpoints, "small")) and (max-width: map-get($breakpoints, "medium")) {
   body,
   div {
-    //background-color: magenta;
+    //background-color: blue;
+    --btnMagicWidth: 15vw;
+    --btnMagicHeight: 7vw;
+    --btnMagicPushDown: 1vh;
+    --btnMagicBoxShadowLvl1: 1vh;
+    --btnMagicBoxShadowLvl2: 1.3vh;
+    --btnMagicBoxShadowLvl3: 2vh;
+    --btnMagicBoxShadowLvl4: 2.5vh;
+    --btnMagicBoxShadowLvl5: 3vh;
+    --btnMagicBoxShadowLvl6: 3.5vh;
+    --btnMagicBoxShadowLvl7: 0vh;
+    --btnMagicBoxShadowLvl8: 0vh;
+    --btnMagicCursor: none;
+    --divMetalWidth: 29vw;
+    --divMetalHeight: 11vw;
+    --divMetalMargin: -2vw;
+    --divMetalBoxShadowLvl2: 1.5vh;
+    --divMetalBoxShadowLvl3: 2.2vh;
+    --divMetalBoxShadowLvl4: 3.1vh;
+    --divMetalBoxShadowLvl5: 4vh;
+    --divHeadersWrapperHeight: 22vh;
+    --fontSize: 60pt;
+  }
+}
+
+/// Large
+@media only screen and (min-width: map-get($breakpoints, "medium")) and (max-width: map-get($breakpoints, "large")) {
+  body,
+  div {
+    //background-color: white;
     --btnMagicWidth: 8vw;
     --btnMagicHeight: 5vw;
     --btnMagicPushDown: 1vh;
+    --btnMagicBoxShadowLvl1: 1vh;
     --btnMagicBoxShadowLvl2: 2vh;
     --btnMagicBoxShadowLvl3: 3vh;
     --btnMagicBoxShadowLvl4: 4vh;
     --btnMagicBoxShadowLvl5: 0vh;
+    --btnMagicBoxShadowLvl6: 0vh;
+    --btnMagicBoxShadowLvl7: 0vh;
+    --btnMagicBoxShadowLvl8: 0vh;
+    --btnMagicCursor: pointer;
     --divMetalWidth: 12vw;
     --divMetalHeight: 9vw;
     --divMetalMargin: -4vw;
     --divMetalBoxShadowLvl2: 2vh;
     --divMetalBoxShadowLvl3: 3vh;
+    --divMetalBoxShadowLvl4: 0vh;
+    --divMetalBoxShadowLvl5: 0vh;
     --divHeadersWrapperHeight: 17vh;
+    --fontSize: 60pt;
   }
 }
-@media screen and (min-width: map-get($breakpoints, "large")) {
+
+/// Above Large
+@media only screen and (min-width: map-get($breakpoints, "large")) {
   body,
   div {
     //background-color: teal;
     --btnMagicWidth: 8vw;
     --btnMagicHeight: 5vw;
     --btnMagicPushDown: 1vh;
+    --btnMagicBoxShadowLvl1: 1vh;
     --btnMagicBoxShadowLvl2: 2vh;
     --btnMagicBoxShadowLvl3: 3vh;
     --btnMagicBoxShadowLvl4: 4vh;
     --btnMagicBoxShadowLvl5: 5vh;
+    --btnMagicBoxShadowLvl6: 0vh;
+    --btnMagicBoxShadowLvl7: 0vh;
+    --btnMagicBoxShadowLvl8: 0vh;
+    --btnMagicCursor: pointer;
     --divMetalWidth: 12vw;
     --divMetalHeight: 8vw;
     --divMetalMargin: -4vw;
     --divMetalBoxShadowLvl2: 2vh;
     --divMetalBoxShadowLvl3: 3vh;
+    --divMetalBoxShadowLvl4: 0vh;
+    --divMetalBoxShadowLvl5: 0vh;
     --divHeadersWrapperHeight: 15vh;
+    --fontSize: 60pt;
   }
 }
+/*
+@media (pointer: none), (pointer: coarse) {
+  body,
+  div {
+    background-color: orange;
+    --btnMagicWidth: 32vw;
+    --btnMagicHeight: 15vw;
+    --btnMagicPushDown: 1vh;
+    --btnMagicBoxShadowLvl1: 1vw;
+    --btnMagicBoxShadowLvl2: 2vw;
+    --btnMagicBoxShadowLvl3: 3vw;
+    --btnMagicBoxShadowLvl4: 4vw;
+    --btnMagicBoxShadowLvl5: 5vw;
+    --btnMagicBoxShadowLvl6: 6vw;
+    --btnMagicBoxShadowLvl7: 7vw;
+    --btnMagicBoxShadowLvl8: 8vw;
+    --divMetalWidth: 52vw;
+    --divMetalHeight: 24vw;
+    --divMetalMargin: -10vw;
+    --divMetalBoxShadowLvl2: 2vw;
+    --divMetalBoxShadowLvl3: 3vw;
+    --divMetalBoxShadowLvl4: 4vw;
+    --divMetalBoxShadowLvl5: 5vw;
+    --divHeadersWrapperHeight: 15vh;
+    --fontSize: 140pt;
+  }
+}*/
